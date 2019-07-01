@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Insert title here</title>
+	<link rel="stylesheet" type="text/css" href="../../easyUI/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../easyUI/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../../easyUI/css/demo.css">
+	<script src="../../js/tools_js/jquery-1.8.3.js"></script>
+	<!--jquery.easyui.min.js包含了easyUI中的所有插件-->
+	<script src="../../js/tools_js/jquery.easyui.min.js"></script>
+	<script src="../../js/admin_js/MyEasyUICRUD.js"></script>
+</head>
+<body>
+	<!--修改工具栏-->
+	<div id="ToolBar">
+		<!--操作-->
+		<div style="height: 40px;">
+			<a href="javascript:OpenSaveDialog()" class="easyui-linkbutton"
+			    iconCls="icon-add" plain="true">添加
+			</a>
+			<a href="javascript:OpenModifyDialog()" class="easyui-linkbutton"
+				iconCls="icon-edit" plain="true">修改
+			</a>
+			<a href="javascript:Delete()" class="easyui-linkbutton"
+				iconCls="icon-remove" plain="true">删除
+			</a>
+		</div>
+		<!--查询条件-->
+		<div>
+			<span style="margin-left: 30px">用户名</span><input id="name" class="easyui-textbox" style="width:150px">
+			<span style="margin-left: 30px">起始年龄</span><input id="startAge" class="easyui-textbox" style="width:150px">
+			<span style="margin-left: 30px">结束年龄</span><input id="endAge" class="easyui-textbox" style="width:150px">
+			<a id="searchUsers" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchUsers()">查询</a>
+		</div>
+
+	</div>
+	<!--表格本体-->
+	<table id="userList"></table>
+	<!--添加弹窗-->
+	<div id="AddDialog" class="easyui-dialog" buttons="#AddDialogButtons"
+		style="width: 280px; height: 250px; padding: 10px 20px;" closed="true">
+		<form id="SaveDialogForm" method="post">
+			<table>
+				<tr>
+					<td>编号:</td>
+					<td><input type="text" class="easyui-validatebox" required
+						name="id" id="sid" /></td>
+				</tr>
+				<tr>
+					<td>姓名:</td>
+					<td><input type="text" name="name" id="sname" /></td>
+				</tr>
+				<tr>
+					<td>密码:</td>
+					<td><input type="password" name="password" id="spassword"></td>
+				</tr>
+				<tr>
+					<td>电话号码:</td>
+					<td><input type="text" name="telephone" id="stelephone"></td>
+				</tr>
+				<tr>
+					<td>是否为管理员:</td>
+					<td>
+						<select name="isadmin" id="sisadmin">
+							<option value="1">是</option>
+							<option value="0">否</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<div id="AddDialogButtons">
+		<a href="javascript:Save()" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+		<a href="javascript:CloseDialog('AddDialog')" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
+	</div>
+	<!--修改弹窗-->
+	<div id="ModifyDialog" class="easyui-dialog" buttons="#ModifyDialogButtons"
+		 style="width: 280px; height: 250px; padding: 10px 20px;" closed="true">
+		<form id="ModifyDialogForm" method="post" >
+			<table>
+				<tr>
+					<td>编号:</td>
+					<td>
+						<input type="text" class="easyui-validatebox" required name="id" id="mid" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td>姓名:</td>
+					<td><input type="text" name="name" id="mname" /></td>
+				</tr>
+				<tr>
+					<td>密码:</td>
+					<td><input type="password" name="password" id="mpassword"></td>
+				</tr>
+				<tr>
+					<td>电话号码:</td>
+					<td><input type="text" name="telephone" id="mtelephone"></td>
+				</tr>
+				<tr>
+					<td>是否为管理员:</td>
+					<td>
+						<select name="isadmin" id="misadmin">
+							<option value="1">是</option>
+							<option value="0">否</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<div id="ModifyDialogButtons">
+		<a href="javascript:Modify()" class="easyui-linkbutton" iconCls="icon-ok">修改</a>
+		<a href="javascript:CloseDialog('ModifyDialog')" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
+	</div>
+
+	<script type="text/javascript">
+		$(function () {
+			//查询用户
+			searchUsers();
+		})
+	</script>
+</body>
+</html>

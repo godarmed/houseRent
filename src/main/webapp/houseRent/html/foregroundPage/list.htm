@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0030)http://localhost:8080/House-2/ -->
+
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD><TITLE>青鸟租房 - 首页</TITLE>
+    <META content="text/html; charset=utf-8" http-equiv=Content-Type>
+    <LINK rel=stylesheet type=text/css href="../../css/style.css">
+    <META name=GENERATOR content="MSHTML 8.00.7601.17514">
+    <script src="../../js/tools_js/jquery-1.8.3.js"></script>
+</HEAD>
+<BODY>
+<!--页眉-->
+<DIV id=header class=wrap>
+    <DIV id=logo><IMG src="../../images/logo.gif"></DIV>
+    <DIV class=search>
+        <span id="welcomeUser">欢迎</span>
+        <LABEL class="ui-green searchs"><a href="guanli.htm" title="">返回房屋管理页面</a></LABEL>
+        <LABEL class=ui-green><INPUT onclick='quit()' value="退       出" type=button name=search></LABEL>
+    </DIV>
+</DIV>
+<!--查询条件-->
+<DIV id=navbar class=wrap>
+    <DL class="search clearfix">
+        <FORM id=sform method=post action="#">
+            <DT>
+                <UL>
+                    <LI class=bold>房屋信息</LI>
+                    <LI>
+                        标题：<INPUT id=add_action_title class=text type=text name=title>
+                        <LABEL class=ui-blue><INPUT onclick="searchAllHouses(1)" value="搜索房屋" type=button name=search></LABEL>
+                    </LI>
+                </UL>
+            </DT>
+            <DD>
+                <UL>
+                    <LI class=first>所在区域</LI>
+                    <LI>
+                        <SELECT id=add_action_districtId name=district_id></SELECT>
+                    </LI>
+                </UL>
+            </DD>
+            <DD>
+                <UL>
+                    <LI class=first>所在街道</LI>
+                    <LI>
+                        <SELECT id=add_action_streetId name=street_id></SELECT>
+                    </LI>
+                </UL>
+            </DD>
+            <DD>
+                <UL>
+                    <LI class=first>房型</LI>
+                    <LI><SELECT id=add_action_typeId name=type_id></SELECT></LI>
+                </UL>
+            </DD>
+            <DD>
+                <UL>
+                    <LI class=first>面积</LI>
+                    <LI>
+                        <SELECT id=add_action_floorage name=floorage>
+                            <OPTION selected value="0-10000000">不限</OPTION>
+                            <OPTION value=0-40>40以下</OPTION>
+                            <OPTION value=40-80>40-80</OPTION>
+                            <OPTION value=80-120>80-120</OPTION>
+                            <OPTION value=120-180>120-180</OPTION>
+                            <OPTION value=180-100000>180以上</OPTION>
+                        </SELECT>
+                    </LI>
+                </UL>
+            </DD>
+            <DD>
+                <UL>
+                    <LI class=first>价格</LI>
+                    <LI>
+                        <SELECT id=add_action_price name=price>
+                            <OPTION selected value="0-100000000">不限</OPTION>
+                            <OPTION value=0-2000>2000以下</OPTION>
+                            <OPTION value=2000-5000>2000-5000</OPTION>
+                            <OPTION value=5000-10000>5000-10000</OPTION>
+                            <OPTION value=10000-15000>10000-15000</OPTION>
+                            <OPTION value=15000-10000000>15000以上</OPTION>
+                        </SELECT>
+                    </LI>
+                </UL>
+            </DD>
+        </FORM>
+    </DL>
+</DIV>
+<!--房屋列表-->
+<DIV id="app" class="main wrap">
+    <TABLE v-if="isRouterShow" class=house-list>
+        <TBODY>
+            <!--样式模板-->
+            <TR    is='all-houses'
+                   v-for="item in groceryList"
+                   :key="item.id"
+                   :todo="item"
+                   :path="path">
+            </TR>
+            <TR>无租房信息</TR>
+        </TBODY>
+    </TABLE>
+
+    <!--分页-->
+    <DIV class=pager>
+        <UL>
+            <LI class=current><A href="javascript:toPage(0);">首页</A></LI>
+            <LI><A href="javascript:toPage(-1);">上一页</A></LI>
+            <LI><A href="javascript:toPage(1);">下一页</A></LI>
+            <LI><A href="javascript:toPage(2);">末页</A></LI>
+            <LI>
+                <select id="pageSize" onchange="toPage('firstPage')">
+                    <option  value="2"  >2</option>
+                    <option value="4"  >4</option>
+                    <option value="6" >6</option>
+                    <option value="8"  >8</option>
+                    <option value="10"  >10</option>
+                </select>
+            </LI>
+        </UL>
+
+        <SPAN class=total><span id="pageNum"></span>/<span id="pages"></span>页</SPAN>
+    </DIV>
+</DIV>
+<!--页脚信息-->
+<DIV id=footer class=wrap>
+    <DL>
+        <DT>青鸟租房 © 2018 北大青鸟 京ICP证1000001号</DT>
+        <DD>关于我们 · 联系方式 · 意见反馈 · 帮助中心</DD>
+    </DL>
+</DIV>
+<script src="../../js/user_js/common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../../js/user_js/guanli.js"></script>
+<script type="text/javascript">
+    //页面初始化
+    $(function (){
+        /*初始时重置pageSize并查询房屋*/
+        $("#pageSize").val(2);
+        searchAllHouses();
+        /*pageSize变动时重置pageSize*/
+        $("#pageSize").change(function () {
+            pageInfo.pageSize = $("#pageSize").val();
+            searchAllHouses();
+        });
+        //初始化区域,街道以及户型
+        searchDistricts();
+        $("#add_action_districtId").change(function () {
+            searchStreets($("#add_action_districtId").val());
+        });
+        searchTypes();
+    })
+</script>
+</BODY>
+</HTML>

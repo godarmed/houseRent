@@ -1,0 +1,28 @@
+<?xml version="1.0"   encoding="UTF-8"?>
+<!DOCTYPE configuration   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!-- 表示类型别名库-->
+    <typeAliases>
+        <!-- 每一个类型的别名  type属性表示别名对应的类型地址 alias表示起的别名-->
+        <!--<typeAlias type="java.util.List" alias="list"/>-->
+        <!-- package表示包，利用包的形式进行扫描包之下的所有的类，别名就是当前类名 -->
+        <package name="com.team.leo.entity"/>
+        <package name="java.lang"/>
+        <package name="java.util"/>
+     </typeAliases>
+
+    <!-- 分页插件 -->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!--3.3.0版本可用 - 分页参数合理化，默认false禁用
+            pageNum表示当前页  pages表示尾页
+            true启用合理化时，如果pageNum<1会查询第一页
+            如果pageNum>pages会查询最后一页
+            false禁用合理化时，如果pageNum<1或pageNum>pages会返回空数据-->
+            <property name="helperDialect" value="mysql" />
+            <property name="reasonable"   value="true"/>
+        </plugin>
+     </plugins>
+</configuration> 

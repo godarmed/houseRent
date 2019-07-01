@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-House" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <link rel="stylesheet" type="text/css" href="../../easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../easyUI/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../easyUI/css/demo.css">
+    <script src="../../js/tools_js/jquery-1.8.3.js"></script>
+    <!--jquery.easyui.min.js包含了easyUI中的所有插件-->
+    <script src="../../js/tools_js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../js/admin_js/houseExCRUD.js"></script>
+</head>
+<body style="min-width:600px;min-height:500px">
+<!--修改工具栏-->
+<div id="ToolBar">
+    <!--操作-->
+    <div style="height: 40px;">
+        <a href="javascript:OpenSaveDialog()" class="easyui-linkbutton"
+           iconCls="icon-add" plain="true">添加
+        </a>
+        <a href="javascript:OpenModifyDialog()" class="easyui-linkbutton"
+           iconCls="icon-edit" plain="true">修改
+        </a>
+        <a href="javascript:Delete()" class="easyui-linkbutton"
+           iconCls="icon-remove" plain="true">删除
+        </a>
+    </div>
+    <!--查询条件-->
+    <div>
+        <form action="#">
+            <span style="margin-left: 20px">户型: </span><select id="add_action_typeId" class="easyui-textbox" style="min-width:60px"></select>
+            <span style="margin-left: 20px">最低价格:</span><input id="minPrice" class="easyui-textbox" style="width:50px">
+            -最高价格<input id="maxPrice" class="easyui-textbox" style="width:50px">
+            <span style="margin-left: 20px">所在区域:</span><select id="add_action_districtId" style="min-width:50px"></select>
+            <span style="margin-left: 20px">所在街道:</span><select id="add_action_streetId" style="min-width:50px"></select>
+            <a id="searchHouse" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchHouse(0,0)">查询</a>
+        </form>
+
+    </div>
+
+</div>
+<!--表格本体-->
+<table id="userList"></table>
+
+<script type="text/javascript">
+    $(function(){
+        //查询所有房屋
+        searchHouse(0,0);
+        //查询所有户型
+        searchTypes();
+        //查询所有区域
+        searchDistricts();
+        //区域变动时查询街道
+        $("#add_action_districtId").change(function () {
+           searchStreets($("#add_action_districtId").val());
+        });
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0049)http://localhost:8080/HouseRent/page/register.jsp -->
+
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD><TITLE>青鸟租房 - 用户注册</TITLE>
+    <META content="text/html; charset=utf-8" http-equiv=Content-Type>
+    <LINK rel=stylesheet type=text/css href="../../css/style.css">
+    <META name=GENERATOR content="MSHTML 8.00.7601.17514">
+    <script src="../../js/tools_js/jquery-1.8.3.js"></script>
+</HEAD>
+<BODY>
+<DIV id=header class=wrap>
+    <DIV id=logo><IMG src="../../images/logo.gif"></DIV>
+    <DIV id=logo><IMG src="../../images/logo.gif"></DIV>
+</DIV>
+<DIV id=regLogin class=wrap>
+    <DIV class=dialog>
+        <DL class=clearfix>
+            <DT>新用户注册</DT>
+            <DD class=past>填写个人信息</DD>
+        </DL>
+        <DIV class=box>
+            <FORM id=registerForm action=/user/users/saveUser.do>
+                <DIV class=infos>
+                    <TABLE class=field>
+                        <TBODY>
+                        <TR>
+                            <TD class=field>用 户 名：</TD>
+                            <TD>
+                                <INPUT id=user_name class=text type=text name=name>
+                                <span id="notice"></span>
+                            </TD>
+                        </TR>
+                        <TR>
+                            <TD class=field>密　　码：</TD>
+                            <TD><INPUT id=user_password class=text type=password name=password></TD>
+                        </TR>
+                        <TR>
+                            <TD class=field>确认密码：</TD>
+                            <TD><INPUT class=text type=password name=repassword></TD>
+                        </TR>
+                        <TR>
+                            <TD class=field>电　　话：</TD>
+                            <TD><INPUT id=user_telephone class=text type=text name=telephone></TD>
+                        </TR>
+                        <TR>
+                            <TD class=field>年   龄：</TD>
+                            <TD><INPUT id=user_age class=text type=text name=age></TD>
+                        </TR>
+                        <TR>
+                            <TD><INPUT id=user_isadmin hidden="hidden" class=text type=text name=isadmin value='0'></TD>
+                        </TR>
+                        </TBODY>
+                    </TABLE>
+                    <DIV class=buttons>
+                        <INPUT id=registerbtn onclick='register()' value=立即注册 type=button disabled>
+                    </DIV>
+                </DIV>
+            </FORM>
+        </DIV>
+    </DIV>
+</DIV>
+<DIV id=footer class=wrap>
+    <DL>
+        <DT>青鸟租房 © 2018 北大青鸟 京ICP证1000001号</DT>
+        <DD>关于我们 · 联系方式 · 意见反馈 · 帮助中心</DD>
+    </DL>
+</DIV>
+<script type="text/javascript">
+    $(function () {
+        //当用户名改变时，判断是否存在该用户
+        $("#user_name").change(function () {
+            $.post("/user/users/isUserExist.do", {name:$("#user_name").val()}, function (result) {
+                if (result.success) {
+                    $("#registerbtn").prop("disabled",true);
+                    $("#notice").html("该用户名已存在").css("color", "green");
+                } else {
+                    $("#registerbtn").prop("disabled",false);
+                    $("#notice").html("该用户名可用").css("color", "green");
+                }
+            }, "json");
+        });
+    });
+
+    function register() {
+        $("#registerForm").submit(
+            "/user/users/saveUser.do",
+            {
+                name:$("#user_name").val(),
+                password:$("#user_password").val(),
+                telephone:$("#user_telephone").val(),
+                age:$("#user_age").val(),
+                isadmin:$("#user_isadmin").val()
+            },
+            function (result) {
+                if (result.success) {
+                    document.location="login.htm"
+                } else {
+                    alert("注册失败！");
+            }
+        }, "json");
+    }
+</script>
+</BODY>
+</HTML>

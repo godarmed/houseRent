@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 1.开启spring注解驱动 -->
+    <context:component-scan base-package="com.team.leo"/>
+
+    <!-- 2.读取properties -->
+    <context:property-placeholder location="classpath:mybatis/properties/db.properties"/>
+
+    <!--3. 配置数据库连接池 c3p0 -->
+    <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="dataSource">
+        <property value="${jdbc.driver}" name="driverClass"/>
+        <!-- 配置Jdbc的Url -->
+        <property value="${jdbc.url}" name="jdbcUrl"/>
+        <!-- 配置用户名 -->
+        <property value="${jdbc.username}" name="user"/>
+        <!-- 密码 -->
+        <property value="${jdbc.password}" name="password"/>
+    </bean>
+
+    <!-- 4.配置事务管理器 -->
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+        <!-- 事务管理数据库连接池 -->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--5. 开启事务的注解驱动 @Transactional -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- 6.spring管理mybatis配置文件 -->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+        <!--dataSource属性指定要用到的连接池 ref映射的是id=dataSource的bean标签，读取连接数据库信息-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--configLocation属性指定mybatis的核心配置文件，管理mybatis配置文件-->
+        <property value="classpath:mybatis/sqlMapConfig.xml" name="configLocation"/>
+        <!-- 所有配置的mapper文件,mybatis的实体类配置文件所有的sql映射文件 -->
+        <property value="classpath*:mybatis/mapper/*.xml" name="mapperLocations"/>
+    </bean>
+
+    <!-- 7.spring管理mybatis映射接口和sql映射文件之间关联关系 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property value="com.team.leo.mapper" name="basePackage"/>
+        <property value="sqlSessionFactory" name="sqlSessionFactoryBeanName"/>
+    </bean>
+</beans>

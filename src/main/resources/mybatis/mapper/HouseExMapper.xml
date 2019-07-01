@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.leo.mapper.HouseExMapper">
+    <resultMap id="BaseResultMap" type="com.team.leo.entity.HouseEx">
+        <id column="hid" jdbcType="VARCHAR" property="id" />
+        <result column="USER_ID" jdbcType="INTEGER" property="userId" />
+        <result column="TYPE_ID" jdbcType="INTEGER" property="typeId" />
+        <result column="TITLE" jdbcType="VARCHAR" property="title" />
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+        <result column="PRICE" jdbcType="DECIMAL" property="price" />
+        <result column="PUBDATE" jdbcType="DATE" property="pubdate" />
+        <result column="FLOORAGE" jdbcType="INTEGER" property="floorage" />
+        <result column="CONTACT" jdbcType="VARCHAR" property="contact" />
+        <result column="STREET_ID" jdbcType="INTEGER" property="streetId" />
+        <result column="ispass" jdbcType="INTEGER" property="ispass" />
+        <result column="isdel" jdbcType="INTEGER" property="isdel" />
+        <result column="path" jdbcType="VARCHAR" property="path" />
+        <result column="sname" jdbcType="VARCHAR" property="sname" />
+        <result column="did" jdbcType="VARCHAR" property="did" />
+        <result column="dname" jdbcType="VARCHAR" property="dname" />
+        <result column="tname" jdbcType="VARCHAR" property="tname" />
+    </resultMap>
+    <sql id="Base_Column_List">
+      h.`id` AS `hid`,h.`USER_ID`,h.`TYPE_ID`,h.`TITLE`,h.`PRICE`,h.`PUBDATE`,h.`FLOORAGE`,h.`contact`,h.`DESCRIPTION`,h.`ispass`,h.`isdel`,h.`path`,d.`id` AS `did`,d.`NAME` AS `dname`,s.`NAME` AS `sname`,t.`NAME` AS `tname`
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        FROM house h
+        INNER JOIN street s ON h.`STREET_ID` = s.`ID`
+        INNER JOIN district d ON s.`DISTRICT_ID` = d.`ID`
+        INNER JOIN TYPE AS t ON	h.`TYPE_ID` = t.`ID`
+        where h.id = #{Id}
+    </select>
+    <select id="selectByExample" parameterType="com.team.leo.util.HouseParams" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        FROM house h
+        INNER JOIN street s ON h.`STREET_ID` = s.`ID`
+        INNER JOIN district d ON s.`DISTRICT_ID` = d.`ID`
+        INNER JOIN TYPE AS t ON	h.`TYPE_ID` = t.`ID`
+        where 1 = 1
+        <if test="userId != null">
+            and USER_ID = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="typeId != null">
+            and TYPE_ID = #{typeId,jdbcType=INTEGER}
+        </if>
+        <if test="minPrice != null">
+            and PRICE &gt; #{minPrice}
+        </if>
+        <if test="maxPrice != null">
+            and PRICE &lt; #{maxPrice}
+        </if>
+        <if test="minFloorage != null">
+            and FLOORAGE &gt; #{minFloorage}
+        </if>
+        <if test="maxFloorage != null">
+            and FLOORAGE &lt; #{maxFloorage}
+        </if>
+        <if test="districtId != null">
+            and d.ID like concat('%',#{districtId},'%')
+        </if>
+        <if test="streetId != null">
+            and STREET_ID like concat('%',#{streetId},'%')
+        </if>
+        <if test="title != null">
+            and TITLE like concat('%',#{title,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="isdel != null">
+            and isdel = #{isdel,jdbcType=INTEGER}
+        </if>
+        <if test="ispass != null">
+            and ispass = #{ispass,jdbcType=INTEGER}
+        </if>
+    </select>
+</mapper>

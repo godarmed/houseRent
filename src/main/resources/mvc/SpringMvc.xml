@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 开启controller层中spring注解驱动  打开 Component Controller Service Reposity -->
+    <context:component-scan base-package="com.team.leo.*" />
+
+    <!-- 开启springmvc特有的注解驱动  打开 @RequestMapping  @RequestParam  -->
+    <mvc:annotation-driven>
+        <mvc:message-converters><!--response.getWriter().Write()  @responsebody -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" /><!--解决@responsebody响应中文乱码-->
+            </bean>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--放行静态文件-->
+    <mvc:default-servlet-handler/>
+    <!--DispatcherServlet-->
+    <!-- 视图解析器  location表示路径地址 -->
+    <!-- <mvc:resources mapping="/demo/css/**" location="/demo/css/"/>
+    <mvc:resources mapping="/demo/js/**" location="/demo/js/"/>
+    <mvc:resources mapping="/demo/jsp/**" location="/demo/jsp/"/>-->
+
+    <!-- 处理jsp页面所在的前缀和后缀 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 前缀,确定当前访问的页面路径地址 -->
+        <property name="prefix" value="/demo/jsp/">
+        </property>
+        <!-- 后缀,确定要访问的文件类型 -->
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+
+    <!-- 文件上传,需要配置MultipartResolver处理器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置船上文件的最大尺寸为5MB -->
+        <property name="maxUploadSize" value="5242880"/>
+        <property name="defaultEncoding" value="utf-8"/>
+    </bean>
+</beans>
