@@ -137,6 +137,12 @@ public class Test1 {
     }
 
 
+    @Test
+    public void getChars(){
+
+
+    }
+
 
     public static void main(String[] args) {
         System.out.println(Test1.getFibonacci1(5));

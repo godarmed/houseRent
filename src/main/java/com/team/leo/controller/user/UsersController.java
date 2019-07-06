@@ -1,6 +1,7 @@
 package com.team.leo.controller.user;
 import com.team.leo.entity.Users;
 import com.team.leo.service.users.UsersService;
+import com.team.leo.util.getVerCode.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
@@ -19,13 +20,66 @@ public class UsersController {
     private UsersService usersService;
 
     /**
+     * 获得验证码
+     * @param userPhone
+     * @param request
+     * @param session
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    @RequestMapping(value = "getVercode.do")
+    public Map<String, Object> getVercode(String userPhone,HttpServletRequest request, HttpSession session){
+        Map<String,Object> map = new HashMap<>();
+        //获取用户手机号
+        if(userPhone == null){
+            map.put("success",false);
+            return map;
+        }
+
+        //创建四位短信验证码并存入session中
+        int vercode = (int)(Math.random()*10000);
+        System.out.println(vercode);
+        session.setAttribute("userVercode", vercode);
+        session.setMaxInactiveInterval(120); //设置session有效时间为120秒
+
+        //**************
+        //发送短信验证码
+        int success = 0;
+        StringBuilder sb = new StringBuilder("您好,号码为");
+        sb.append(userPhone);
+        sb.append("的用户.您的验证登录密码为:");
+        sb.append(vercode);
+        System.out.println(sb);
+        success = SmsUtil.sendMsm(sb.toString(),userPhone);
+        //**************
+
+        if(success > 0){
+            map.put("success",true);
+        }else{
+            map.put("success",false);
+        }
+
+        return map;
+    }
+
+
+    /**
      * 用户登录
      * @param user
      * @return
      */
     @RequestMapping(value = "userLogin.do")
-    public Map<String, Object> userlogin(Users user,HttpServletRequest request, HttpSession session, HttpServletResponse response) throws UnsupportedEncodingException {
+    public Map<String, Object> userlogin(Users user,String userVercode,HttpServletRequest request, HttpSession session, HttpServletResponse response) throws UnsupportedEncodingException {
         Map<String,Object> map = new HashMap<>();
+
+        //判断验证码是否正确
+        if(!userVercode.equals("") && userVercode.equals(((Integer)(session.getAttribute("userVercode"))).toString())){
+            map.put("success",true);
+        }else{
+            map.put("success",false);
+            return map;
+        }
+
         //判断用户是否存在且用户名、密码是否正确
         Users isUserRight = usersService.checkUser(user);
         map.put("success",isUserRight==null?false:true);

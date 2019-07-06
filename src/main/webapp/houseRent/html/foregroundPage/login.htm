@@ -34,12 +34,21 @@
                             <TD class=field>密　　码：</TD>
                             <TD><!-- <input type="password" class="text" name="password" /> -->
                                 <INPUT id=user_password class=text type=password name=password></TD>
-                        </TR><!--
-						<tr>
-							<td class="field">验 证 码：</td>
-							<td><input type="text" class="text verycode" name="veryCode" /></td>
-						</tr>
-						--></TBODY>
+                        </TR>
+                        <TR>
+                            <TD class=field>手 机 号：</TD>
+                            <TD><!-- <input type="password" class="text" name="password" /> -->
+                                <INPUT id=user_phone class=text type=text >
+                                <INPUT id=getVercode type=button value="获取验证码">
+                            </TD>
+                        </TR>
+                        <TR>
+                            <TD class=field>验 证 码：</TD>
+                            <TD><!-- <input type="password" class="text" name="password" /> -->
+                                <INPUT id=user_vercode class=text type=text>
+                            </TD>
+                        </TR>
+                        </TBODY>
                     </TABLE>
                     <DIV class=buttons>
                         <INPUT id="loginbtn" onclick='login()' value=登陆 type=button  disabled>
@@ -78,6 +87,7 @@
             }, "json");
         });
     });
+
 
 </script>
 </body>
